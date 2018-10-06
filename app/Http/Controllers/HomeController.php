@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $post = Post::all();
+        return view('home', ['post' => $post, 'test' => '123']);
+    }
+
+    public function post(Request $request)
+    {
+        $post = new Post();
+        $post->users_id = \Auth::user()->id;
+        $post->content = $request->input('content');
+        $post->save();
+        return redirect()->action(
+            'HomeController@index'
+        );
     }
 }
